@@ -1,0 +1,32 @@
+>> how to upload config
+
+onos-netcfg localhost config.json
+
+>>>> how to get Ip
+
+# h1 dhclient -v h1-eth0
+h2 dhclient -v h2-eth0
+h3 dhclient -v h3-eth0
+# h4 dhclient -v h4-eth0
+# h5 dhclient -v h5-eth0
+
+>>>> Procedure
+
+active onos
+active topo.py (remember default route in mininet)
+active dhcp/proxyApp
+upload dhcp config
+
+
+get host's ip by dhcpApp
+wait dhcp rule timeout (30s) (if pingall)
+use `arping` or `pingall`, let onos know hosts
+set `SwitchNum, DeviceId, IsEdge, VlanId, Subnet` in config manually
+active vlanApp
+upload the above config
+
+
+vlanApp:
+>> install flow rule
+
+

@@ -1,0 +1,82 @@
+#### Checking
+route
+sudo docker inspect h1
+ifconfig
+
+/etc/init.d/quagga restart
+
+#### Create container for a host h1 (h2)
+
+sudo docker run --privileged --cap-add NET_ADMIN \
+--cap-add NET_BROADCAST -d -it \
+--name h1 ubuntu:16.04
+
+
+#### Create a bridge network R1h1br & Connect two domains
+
+sudo docker network create R1h1br
+sudo docker network connect R1h1br R1
+sudo docker network connect R1h1br h1
+
+sudo docker network connect R2h2br R2
+sudo docker network connect R2h2br h2
+
+sudo docker network connect R3h3br R3
+sudo docker network connect R3h3br h3
+
+sudo docker network connect R1R2br R1
+sudo docker network connect R1R2br R2
+
+sudo docker network connect R2R3br R2
+sudo docker network connect R2R3br R3
+
+######## Run bash
+sudo docker exec -it h1 bash
+sudo docker exec -it R1 bash
+
+
+#### install packages
+
+apt-get update
+apt-get install -y net-tools
+apt-get install -y iproute2
+apt-get install -y iputils-ping
+apt-get install -y vim
+apt-get install -y quagga
+apt-get install -y telnet
+
+
+#### Set R1 (R2) as default gateway of h1 (h2) HHHHHHHHHHHHHHHHHHH
+
+ip route del default
+ip route add default via 172.18.0.2
+
+#### Enable IP forwarding on RRRRRRRRRRRR
+vim /etc/sysctl.conf
+# net.ipv4.ip_forward=1
+sysctl -p
+
+vim /etc/quagga/daemons
+zebra, bpgd = yes
+
+
+#### Set Hostname and Password of Zebra on RRRRRRRRRRR
+vim /etc/quagga/zebra.conf
+
+hostname R1zebra
+password vRouter
+log stdout
+
+
+#### BGP Config on RRRRRRRRRRR
+vim /etc/quagga/bgpd.conf
+
+------------
+At another file
+------------
+
+/etc/init.d/quagga restart
+route
+
+
+

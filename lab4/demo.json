@@ -1,0 +1,9 @@
+{
+  "apps": {
+    "nctu.winlab.unicastdhcp": {
+      "GetHostsInfo": {
+        "ip": ["192.168.20.5", "192.168.20.17"]
+      }
+    }
+  }
+}
